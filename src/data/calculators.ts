@@ -88,8 +88,86 @@ C('corrected-age','Corrected age for prematurity','Neonatology','Estimate correc
 );
 
 export const categories=['All calculators',...Array.from(new Set(calculators.map(c=>c.category)))];
+
+const positiveDenominators:Record<string,string[]> = {
+ 'dose-volume':['strength'],
+ 'infusion-rate':['hours'],
+ 'drop-rate':['minutes'],
+ 'mcg-kg-min':['conc'],
+ 'dilution':['c1'],
+ 'molarity':['mw','vol'],
+ 'mg-mmol':['mw'],
+ 'bmi':['height'],
+ 'crcl':['scr'],
+ 'egfr-2021':['scr'],
+ 'fib4':['alt','platelets'],
+ 'retic-corrected':['normal'],
+ 'transferrin-sat':['tibc'],
+ 'phenytoin-corrected':['albumin'],
+ 'calvert':['auc','gfr'],
+ 'free-water-deficit':['tbw'],
+ 'bsa-dose':['bsa'],
+ 'oxytocin-rate':['conc'],
+ 'sensitivity':['tp','fn'],
+ 'specificity':['tn','fp'],
+ 'ppv-npv':['tp','fp','tn','fn'],
+ 'incidence':['pt'],
+ 'prevalence':['pop'],
+ 'relative-risk':['a','b','c','d'],
+ 'odds-ratio':['b','c'],
+ 'rrr':['control']
+};
+
+const positiveGroups:Record<string,string[][]> = {
+ 'relative-risk':[['a','b'],['c','d']],
+ 'odds-ratio':[['a','b'],['c','d']]
+};
+
+const validDate=(raw:string):boolean=>{
+ if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(raw))return false;
+ const [year,month,day]=raw.split('-').map(Number);
+ const parsed=new Date(Date.UTC(year,month-1,day));
+ return parsed.getUTCFullYear()===year&&parsed.getUTCMonth()===month-1&&parsed.getUTCDate()===day;
+};
+
 export function runCalculator(id:string,values:Record<string,string>):Result[]{
- const calc=calculators.find(c=>c.id===id);if(!calc)throw new Error('Calculator not found');
- for(const field of calc.fields){const raw=values[field.key];if(raw===undefined||raw==='')throw new Error('Complete every required field.');if(field.type==='date'){if(Number.isNaN(date(raw).getTime()))throw new Error('Enter a valid date.');continue;}if(field.type==='select')continue;const x=Number(raw);if(!Number.isFinite(x)||(field.min!==undefined&&x<field.min)||(field.max!==undefined&&x>field.max))throw new Error('Check '+field.label+'; value outside accepted range.');}
- return calc.calculate(values);
+ const calc=calculators.find(c=>c.id===id);
+ if(!calc)throw new Error('Calculator not found.');
+ for(const field of calc.fields){
+  const raw=values[field.key];
+  if(raw===undefined||raw.trim()==='')throw new Error('Complete every required field.');
+  if(field.type==='date'){
+   if(!validDate(raw))throw new Error('Enter a real calendar date in YYYY-MM-DD format.');
+   if(['edd','gestational-age','edd-conception'].includes(id)){
+    const [year,month,day]=raw.split('-').map(Number);
+    const entered=Date.UTC(year,month-1,day);
+    const today=new Date();
+    const todayUTC=Date.UTC(today.getFullYear(),today.getMonth(),today.getDate());
+    if(entered>todayUTC)throw new Error('The date cannot be in the future.');
+   }
+   continue;
+  }
+  if(field.type==='select'){
+   if(!field.options?.includes(raw))throw new Error('Choose a valid option for '+field.label+'.');
+   continue;
+  }
+  const x=Number(raw);
+  if(!Number.isFinite(x)||(field.min!==undefined&&x<field.min)||(field.max!==undefined&&x>field.max)){
+   throw new Error('Check '+field.label+'; enter a value within '+(field.min??'the allowed')+' and '+(field.max??'the allowed')+'.');
+  }
+  if(field.step===1&&!Number.isInteger(x))throw new Error(field.label+' must be a whole number.');
+ }
+ for(const key of positiveDenominators[id]||[]){
+  if(Number(values[key])<=0)throw new Error('The '+(calc.fields.find(f=>f.key===key)?.label||key)+' must be greater than zero.');
+ }
+ for(const group of positiveGroups[id]||[]){
+  if(group.reduce((sum,key)=>sum+Number(values[key]),0)<=0)throw new Error('Each comparison group must contain at least one observation.');
+ }
+ if(id==='dilution'&&Number(values.c2)>Number(values.c1))throw new Error('The target concentration cannot exceed the stock concentration.');
+ if(id==='free-water-deficit'&&Number(values.na)<=140)throw new Error('This deficit estimate is intended for sodium above 140 mmol/L.');
+ if(id==='corrected-age'&&Number(values.chronWeeks)<40-Number(values.gestWeeks))throw new Error('Chronological age cannot be less than the number of weeks born before 40 weeks.');
+ if(id==='odds-ratio'&&['a','b','c','d'].some(key=>Number(values[key])===0))throw new Error('A zero cell requires a prespecified statistical correction or an exact method; this simple odds-ratio calculator does not apply one.');
+ const results=calc.calculate(values);
+ if(results.some(result=>/NaN|Infinity|Not calculable/i.test(result.value)))throw new Error('These inputs do not produce a valid finite result. Check the values and units.');
+ return results;
 }
