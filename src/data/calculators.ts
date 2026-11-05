@@ -108,19 +108,20 @@ const positiveDenominators:Record<string,string[]> = {
  'free-water-deficit':['tbw'],
  'bsa-dose':['bsa'],
  'oxytocin-rate':['conc'],
- 'sensitivity':['tp','fn'],
- 'specificity':['tn','fp'],
- 'ppv-npv':['tp','fp','tn','fn'],
  'incidence':['pt'],
  'prevalence':['pop'],
  'relative-risk':['a','b','c','d'],
  'odds-ratio':['b','c'],
- 'rrr':['control']
+ 'rrr':['control'],
+ 'bioavailability':['auciv','dosepo']
 };
 
 const positiveGroups:Record<string,string[][]> = {
  'relative-risk':[['a','b'],['c','d']],
- 'odds-ratio':[['a','b'],['c','d']]
+ 'odds-ratio':[['a','b'],['c','d']],
+ 'sensitivity':[['tp','fn']],
+ 'specificity':[['tn','fp']],
+ 'ppv-npv':[['tp','fp'],['tn','fn']]
 };
 
 const validDate=(raw:string):boolean=>{
