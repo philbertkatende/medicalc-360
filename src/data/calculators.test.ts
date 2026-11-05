@@ -1,7 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import {calculators,runCalculator} from './calculators';
 describe('MediCalc 360 calculator registry and arithmetic',()=>{
- it('contains at least 65 unique calculator definitions',()=>{expect(calculators.length).toBeGreaterThanOrEqual(65);expect(new Set(calculators.map(c=>c.id)).size).toBe(calculators.length)});
+ it('contains at least 65 unique calculator definitions',()=>{expect(calculators.length).toBe(71);expect(new Set(calculators.map(c=>c.id)).size).toBe(calculators.length)});
  it('calculates dose to volume',()=>expect(runCalculator('dose-volume',{dose:'500',strength:'100'})[0].value).toBe('5 mL'));
  it('calculates Cockcroft-Gault example',()=>expect(parseFloat(runCalculator('crcl',{age:'40',weight:'70',scr:'1',sex:'Male'})[0].value)).toBeCloseTo(97.22,1));
  it('calculates Mosteller BSA',()=>expect(runCalculator('bsa',{height:'170',weight:'70'})[0].value).toBe('1.82 m²'));
