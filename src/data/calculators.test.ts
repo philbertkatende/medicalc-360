@@ -6,6 +6,9 @@ describe('MediCalc 360 calculator registry and arithmetic',()=>{
  it('calculates Cockcroft-Gault example',()=>expect(parseFloat(runCalculator('crcl',{age:'40',weight:'70',scr:'1',sex:'Male'})[0].value)).toBeCloseTo(97.22,1));
  it('calculates Mosteller BSA',()=>expect(runCalculator('bsa',{height:'170',weight:'70'})[0].value).toBe('1.82 m²'));
  it('rejects invalid ranges',()=>expect(()=>runCalculator('bmi',{weight:'-1',height:'170'})).toThrow(/weight/i));
+ it('allows zero true positives when the diagnostic denominator is non-zero',()=>expect(runCalculator('sensitivity',{tp:'0',fn:'10'})[0].value).toBe('0 %'));
+ it('allows zero false positives when the diagnostic denominator is non-zero',()=>expect(runCalculator('specificity',{tn:'10',fp:'0'})[0].value).toBe('100 %'));
+ it('rejects a diagnostic table with no observations in a denominator',()=>expect(()=>runCalculator('sensitivity',{tp:'0',fn:'0'})).toThrow(/at least one observation/i));
  it('rejects zero denominators instead of returning Infinity',()=>expect(()=>runCalculator('dose-volume',{dose:'5',strength:'0'})).toThrow(/greater than zero/i));
  it('rejects a zero person-time denominator',()=>expect(()=>runCalculator('incidence',{cases:'2',pt:'0',scale:'1000'})).toThrow(/greater than zero/i));
  it('rejects invalid calendar dates such as 31 February',()=>expect(()=>runCalculator('edd',{lmp:'2026-02-31'})).toThrow(/calendar date/i));
