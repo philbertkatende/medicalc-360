@@ -1,75 +1,51 @@
 # MediCalc 360
 
-An expanding medical and pharmaceutical calculation workspace. The first release establishes the responsive web-app shell, searchable calculator catalogue, transparent calculation outputs, formula explanations and reference/limitation panels.
+A growing medical and pharmaceutical calculation workspace built with React, TypeScript and Vite.
 
-## Current starter calculators
+## Current calculator domains
 
-- Dose-to-volume conversion
-- Weight-based dose arithmetic
-- IV pump infusion rate
-- Gravity drip rate
-- Body mass index (adult)
-- Body surface area (Mosteller)
-- Creatinine clearance (Cockcroft–Gault, adult)
-- Anion gap (without potassium)
-- Mean arterial pressure estimate
-- QT correction (Bazett)
-- Estimated date of delivery from LMP
-- Gestational age from LMP
+- Dosage and administration
+- IV and infusion calculations
+- Compounding and formulation
+- General anthropometry and body size
+- Fluids and nutrition
+- Renal function and electrolytes
+- Cardiovascular haemodynamics and risk scores
+- Obstetrics and gynaecology
+- Haematology
+- Respiratory and critical care
+- Pharmacokinetics and therapeutic drug monitoring
+- Epidemiology and biostatistics
 
 ## Run locally
 
 ```bash
 npm install
 npm run dev
-```
-
-Production build:
-
-```bash
+npm test
 npm run build
-npm run preview
 ```
 
-## Product principles
+## Clinical governance
 
-1. **Reference-led:** each calculator must have a named source, version/review date and clearly stated assumptions.
-2. **Transparent:** show units, formula, intermediate working where appropriate, precision and interpretation limits.
-3. **Safe by design:** validate inputs, distinguish estimates from measured values, show clinical warnings and never imply that a score or calculation is a diagnosis.
-4. **Modular:** calculators should be independently testable and grouped by clinical or pharmacy domain.
-5. **Privacy-conscious:** do not collect or store patient-identifiable information in the initial release.
-6. **Accessible:** responsive layout, keyboard support, clear labels and readable contrast.
+**Educational development prototype only. Not a clinically validated medical device, prescribing system or substitute for professional judgement.** Do not use outputs as the sole basis for patient care.
 
-## Clinical governance — required before clinical deployment
+Every calculator displays its equation, source/basis and limitations. A familiar equation or citation does not establish suitability for every population or clinical setting.
 
-This repository is an early educational prototype, **not a clinically validated medical device or prescribing system**. Do not use its outputs as the sole basis for patient-care decisions.
+Before any calculator is promoted for clinical use:
+1. Verify its equation against current primary sources, authoritative references and applicable local guidelines.
+2. Define intended population, exclusions, units, accepted input ranges, rounding and interpretation.
+3. Add independent expected-value, boundary, regression and clinical scenario tests.
+4. Obtain independent review by qualified clinicians/pharmacists.
+5. Record reviewer, source version and review date; establish a review cycle.
+6. Reassess when guidelines, assays, standards or product information change.
 
-Before a calculator is promoted for clinical use:
-- Verify the equation against a current primary source, guideline or authoritative reference.
-- Define the intended population, exclusions, input units, allowable ranges and rounding rules.
-- Add independent test cases, boundary tests and regression tests.
-- Have the implementation and clinical interpretation independently reviewed by qualified clinicians/pharmacists.
-- Record the source, version, reviewer and review date.
-- Reassess when guidelines, assays, reference standards or product labels change.
+Particular caution is required for paediatric/neonatal dosing, renal dose adjustment, pregnancy, anticoagulation, QT correction, fluid therapy, critical care, oncology and high-alert infusions.
 
-Particular care is required for renal-dose estimation, paediatric/neonatal dosing, pregnancy, QT correction, anticoagulation, electrolyte correction, critical-care scores and chemotherapy dosing. A formula alone is not a complete clinical protocol.
+## Privacy
 
-## Planned modules
+The prototype does not request patient names or identifiers. Favourites are stored locally in the browser. Do not enter identifiable patient information.
 
-- Paediatrics and neonatology
-- Pharmacokinetics and therapeutic drug monitoring
-- Renal dose adjustment and dialysis
-- Cardiovascular risk and clinical scores
-- Obstetrics and gynaecology
-- Critical care, anaesthesia and respiratory calculations
-- Electrolytes, acid–base and fluid therapy
-- Antimicrobial stewardship and dosing
-- Oncology and chemotherapy
-- Toxicology and antidotes
-- Pharmaceutical compounding, manufacturing and quality control
-- Epidemiology, biostatistics and research
-- Pharmacoeconomics, procurement and inventory management
+## Further planned expansion
 
-## Technology
-
-React, TypeScript and Vite. The app includes a basic web-app manifest and service-worker shell cache; offline behavior will be expanded and tested in a later iteration.
+Additional modules include antimicrobial dose optimisation, therapeutic drug monitoring protocols, oncology, TPN, obstetric emergency protocols, anaesthesia, toxicology, pharmacy inventory/procurement, pharmaceutical quality control, pharmacoeconomics, research statistics and guideline-linked decision support. These require source verification and clinical review before clinical use.
