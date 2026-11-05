@@ -32,4 +32,6 @@ describe('MediCalc 360 calculator registry and arithmetic',()=>{
  it('calculates A-a gradient using local atmospheric pressure and RQ',()=>expect(runCalculator('aa-gradient',{fio2:'0.21',paco2:'40',pao2:'80',patm:'760',rq:'0.8'})[0].value).toBe('19.73 mmHg'));
  it('calculates an Apgar score with its assessment time recorded',()=>expect(runCalculator('apgar',{timepoint:'5 minutes',appearance:'2 — completely pink',pulse:'2 — 100/min or more',grimace:'1 — grimace',activity:'1 — some flexion',respiration:'2 — good cry'})[0].label).toBe('Apgar score at 5 minutes'));
  it('calculates a known FIB-4 arithmetic example',()=>expect(runCalculator('fib4',{age:'50',ast:'40',alt:'50',platelets:'200'})[0].value).toBe('1.41'));
+ it('labels negative relative risk reduction as relative risk increase',()=>expect(runCalculator('rrr',{control:'10',treatment:'15'})[0].label).toBe('Relative risk increase'));
+ it('rejects zero exposed-group total for relative risk',()=>expect(()=>runCalculator('relative-risk',{a:'0',b:'0',c:'1',d:'9'})).toThrow(/comparison group/i));
 });
