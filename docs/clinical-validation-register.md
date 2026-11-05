@@ -1,7 +1,7 @@
 # MediCalc 360 — clinical validation register
 
 **Catalogue snapshot:** 71 calculator definitions  
-**Branch:** `safety/input-validation-errors`  
+**Branch:** `main`  
 **Purpose:** Track the evidence and review required before any calculator is represented as clinically validated.
 
 ## Important status statement
@@ -104,4 +104,4 @@ Before changing a calculator's status to reviewed, record:
 
 ## Automated testing status
 
-GitHub Actions run `41980381559` completed successfully on commit `65a33d88f2b380ad8e491d3ba4c1d05231ee17a5`; its calculator-test and production-build steps passed. This is software verification only, not clinical validation.
+GitHub Actions run `41981236716` completed successfully for PR #1 head commit `8c3fff955b5a161ccfce6e749d1fa794929fa012`. Dependency installation, calculator tests and the production build all passed. The merged commit `6b76c894399ad8ab598df5cbea354c5017242e67` is deployed to Vercel production with status READY. This is software verification only, not clinical validation.
