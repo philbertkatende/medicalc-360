@@ -106,14 +106,15 @@ const positiveDenominators:Record<string,string[]> = {
  'phenytoin-corrected':['albumin'],
  'calvert':['auc','gfr'],
  'free-water-deficit':['tbw'],
+ 'fena':['pcr','pna','ucr'],
  'bsa-dose':['bsa'],
  'oxytocin-rate':['conc'],
  'incidence':['pt'],
  'prevalence':['pop'],
- 'relative-risk':['a','b','c','d'],
+
  'odds-ratio':['b','c'],
  'rrr':['control'],
- 'bioavailability':['auciv','dosepo']
+ 'bioavailability':['auciv','doseiv','dosepo']
 };
 
 const positiveGroups:Record<string,string[][]> = {
@@ -167,7 +168,10 @@ export function runCalculator(id:string,values:Record<string,string>):Result[]{
  if(id==='dilution'&&Number(values.c2)>Number(values.c1))throw new Error('The target concentration cannot exceed the stock concentration.');
  if(id==='free-water-deficit'&&Number(values.na)<=140)throw new Error('This deficit estimate is intended for sodium above 140 mmol/L.');
  if(id==='corrected-age'&&Number(values.chronWeeks)<40-Number(values.gestWeeks))throw new Error('Chronological age cannot be less than the number of weeks born before 40 weeks.');
- if(id==='odds-ratio'&&['a','b','c','d'].some(key=>Number(values[key])===0))throw new Error('A zero cell requires a prespecified statistical correction or an exact method; this simple odds-ratio calculator does not apply one.');
+ if(id==='relative-risk'&&Number(values.c)<=0)throw new Error('The unexposed event count must be greater than zero to calculate a finite relative risk.');
+ if(['map','pulse-pressure'].includes(id)&&Number(values.sbp)<=Number(values.dbp))throw new Error('Systolic blood pressure must be greater than diastolic blood pressure.');
+ if(id==='anc'&&Number(values.neut)+Number(values.bands)>100)throw new Error('Neutrophil and band percentages cannot sum to more than 100%.');
+ if(id==='prevalence'&&Number(values.cases)>Number(values.pop))throw new Error('Existing cases cannot exceed the population assessed.');
  const results=calc.calculate(values);
  if(results.some(result=>/NaN|Infinity|Not calculable/i.test(result.value)))throw new Error('These inputs do not produce a valid finite result. Check the values and units.');
  return results;
