@@ -1,10 +1,1 @@
-{
-  "name": "MediCalc 360 — Medical & Pharmacy Calculators",
-  "short_name": "MediCalc 360",
-  "description": "A growing reference-led collection of medical and pharmaceutical calculators.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#f5f8fa",
-  "theme_color": "#102a43",
-  "icons": []
-}
+{"name":"MediCalc 360 — Medical & Pharmacy Calculators","short_name":"MediCalc 360","description":"A reference-led collection of medical and pharmaceutical calculators.","start_url":"/","display":"standalone","background_color":"#f5f8fa","theme_color":"#102a43","icons":[]}
