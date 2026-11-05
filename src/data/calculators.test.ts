@@ -5,7 +5,16 @@ describe('MediCalc 360 calculator registry and arithmetic',()=>{
  it('calculates dose to volume',()=>expect(runCalculator('dose-volume',{dose:'500',strength:'100'})[0].value).toBe('5 mL'));
  it('calculates Cockcroft-Gault example',()=>expect(parseFloat(runCalculator('crcl',{age:'40',weight:'70',scr:'1',sex:'Male'})[0].value)).toBeCloseTo(97.22,1));
  it('calculates Mosteller BSA',()=>expect(runCalculator('bsa',{height:'170',weight:'70'})[0].value).toBe('1.82 m²'));
- it('rejects invalid ranges',()=>expect(()=>runCalculator('bmi',{weight:'-1',height:'170'})).toThrow());
+ it('rejects invalid ranges',()=>expect(()=>runCalculator('bmi',{weight:'-1',height:'170'})).toThrow(/weight/i));
+ it('rejects zero denominators instead of returning Infinity',()=>expect(()=>runCalculator('dose-volume',{dose:'5',strength:'0'})).toThrow(/greater than zero/i));
+ it('rejects a zero person-time denominator',()=>expect(()=>runCalculator('incidence',{cases:'2',pt:'0',scale:'1000'})).toThrow(/greater than zero/i));
+ it('rejects invalid calendar dates such as 31 February',()=>expect(()=>runCalculator('edd',{lmp:'2026-02-31'})).toThrow(/calendar date/i));
+ it('rejects malformed dates',()=>expect(()=>runCalculator('edd',{lmp:'not-a-date'})).toThrow(/calendar date/i));
+ it('rejects future LMP dates',()=>expect(()=>runCalculator('edd',{lmp:'2099-01-01'})).toThrow(/future/i));
+ it('rejects invalid select values',()=>expect(()=>runCalculator('crcl',{age:'40',weight:'70',scr:'1',sex:'Other'})).toThrow(/valid option/i));
+ it('rejects fractional values for integer-only fields',()=>expect(()=>runCalculator('gcs',{eye:'2.5',verbal:'4',motor:'6'})).toThrow(/whole number/i));
+ it('rejects target dilution stronger than stock',()=>expect(()=>runCalculator('dilution',{c1:'1',c2:'2',v2:'10'})).toThrow(/cannot exceed/i));
+ it('rejects zero cells in simple odds ratio calculator',()=>expect(()=>runCalculator('odds-ratio',{a:'1',b:'0',c:'2',d:'3'})).toThrow(/zero cell/i));
  it('calculates 4-2-1 for 25 kg',()=>expect(runCalculator('peds-421',{weight:'25'})[0].value).toBe('65 mL/hour'));
  it('calculates qSOFA criteria',()=>expect(runCalculator('qsofa',{rr:'24',sbp:'95',mental:'Yes'})[0].value).toBe('3 points'));
  it('calculates GCS total',()=>expect(runCalculator('gcs',{eye:'4',verbal:'5',motor:'6'})[0].value).toBe('15/15'));
