@@ -24,6 +24,7 @@ describe('MediCalc 360 calculator registry and arithmetic',()=>{
  it('rejects systolic pressure below diastolic pressure',()=>expect(()=>runCalculator('map',{sbp:'80',dbp:'90'})).toThrow(/greater than diastolic/i));
  it('rejects prevalence greater than 100 percent',()=>expect(()=>runCalculator('prevalence',{cases:'12',pop:'10'})).toThrow(/cannot exceed/i));
  it('calculates 4-2-1 for 25 kg',()=>expect(runCalculator('peds-421',{weight:'25'})[0].value).toBe('65 mL/hour'));
+ it('calculates 2024 ESC CHA2DS2-VA score without sex category',()=>expect(runCalculator('cha2ds2-va',{age:'75',hf:'No',htn:'Yes',dm:'No',stroke:'No',vascular:'No'})[0].value).toBe('3 points'));
  it('calculates qSOFA criteria',()=>expect(runCalculator('qsofa',{rr:'24',sbp:'95',mental:'Yes'})[0].value).toBe('3 points'));
  it('calculates GCS total',()=>expect(runCalculator('gcs',{eye:'4',verbal:'5',motor:'6'})[0].value).toBe('15/15'));
  it('calculates corrected phenytoin estimate',()=>expect(parseFloat(runCalculator('phenytoin-corrected',{total:'15',albumin:'2'})[0].value)).toBeCloseTo(30,1));
