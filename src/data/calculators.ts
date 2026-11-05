@@ -127,8 +127,10 @@ const positiveGroups:Record<string,string[][]> = {
 };
 
 const validDate=(raw:string):boolean=>{
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(raw))return false;
- const [year,month,day]=raw.split('-').map(Number);
+ const parts=raw.split('-');
+ if(parts.length!==3||parts[0].length!==4||parts[1].length!==2||parts[2].length!==2)return false;
+ const [year,month,day]=parts.map(Number);
+ if(!Number.isInteger(year)||year<1000||!Number.isInteger(month)||!Number.isInteger(day))return false;
  const parsed=new Date(Date.UTC(year,month-1,day));
  return parsed.getUTCFullYear()===year&&parsed.getUTCMonth()===month-1&&parsed.getUTCDate()===day;
 };
@@ -155,6 +157,7 @@ export function runCalculator(id:string,values:Record<string,string>):Result[]{
    continue;
   }
   const x=Number(raw);
+  if((positiveDenominators[calc.id]||[]).includes(field.key)&&x<=0)throw new Error('The '+field.label+' must be greater than zero.');
   if(!Number.isFinite(x)||(field.min!==undefined&&x<field.min)||(field.max!==undefined&&x>field.max)){
    throw new Error('Check '+field.label+'; enter a value within '+(field.min??'the allowed')+' and '+(field.max??'the allowed')+'.');
   }
