@@ -4,7 +4,7 @@ MediCalc 360 is an expanding medical and pharmaceutical calculation workspace bu
 
 ## Current build
 
-**70 calculator definitions** across:
+**71 calculator definitions** across:
 - Dosage and administration
 - IV and infusion calculations
 - Compounding and formulation
